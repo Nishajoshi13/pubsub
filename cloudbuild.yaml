@@ -15,7 +15,7 @@ images:
   - 'gcr.io/$PROJECT_ID/angular-app:latest'
 
 
-  options:
+options:
   logging: CLOUD_LOGGING_ONLY
 
 
