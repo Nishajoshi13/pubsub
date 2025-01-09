@@ -13,7 +13,6 @@ steps:
 
 options:
   logging: CLOUD_LOGGING_ONLY
-  logs_bucket: gs://bucke_t
 
 images:
   - 'gcr.io/$PROJECT_ID/angular-app:latest'
