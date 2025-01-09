@@ -1,11 +1,11 @@
 steps:
  # Step 1: Install dependencies using stable Node.js version
-  - name: 'node:16'
+  - name: 'node:18'
     entrypoint: 'npm'
     args: ['install']
 
 # Step 2: Build the Angular app with production settings
-  - name: 'node:16'
+  - name: 'node:18'
     entrypoint: 'npm'
     args: ['run', 'build', '--prod']
   - name: 'gcr.io/cloud-builders/docker'
