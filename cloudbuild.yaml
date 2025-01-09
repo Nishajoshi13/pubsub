@@ -11,10 +11,11 @@ steps:
       - 'gcr.io/$PROJECT_ID/angular-app:latest'
 
 
-options:
-  logging: CLOUD_LOGGING_ONLY
-
 images:
   - 'gcr.io/$PROJECT_ID/angular-app:latest'
+
+
+  options:
+  logging: CLOUD_LOGGING_ONLY
 
 
