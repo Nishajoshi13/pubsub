@@ -15,13 +15,14 @@ export class PubSubService {
   //   }
   
   //   const payload = { message };
-  //   return this.http.post(`${this.backendUrl}/publish`, payload);
+  //   return this.http.post(`${this.backendUrl}/publishMessage`, payload);
   // }
   
 
   // pullMessages(): Observable<any> {
-  //   return this.http.get(`${this.backendUrl}/pull`,);
+  //   return this.http.get(`${this.backendUrl}/pullMessages`,);
   // }
+  
   private publishUrl = 'https://us-central1-my-kubernetes-project-444304.cloudfunctions.net/publishMessage';
   private pullUrl = ' https://us-central1-my-kubernetes-project-444304.cloudfunctions.net/pullMessages';
 
