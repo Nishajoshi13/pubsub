@@ -1,14 +1,17 @@
-# Use the official Nginx image
-FROM nginx:alpine
+# Use the official Node.js image
+FROM node:alpine
 
-# Copy the Angular build output to the Nginx folder
-COPY dist/pubsub-angular/ /usr/share/nginx/html
+# Install http-server globally
+RUN npm install -g http-server
 
-# Copy the custom nginx.conf to override default configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+# Set the working directory inside the container
+WORKDIR /app
 
-# Expose port 80 for the application
+# Copy the Angular app's dist folder into the container
+COPY dist/pubsub-angular /app
+
+# Expose port 8080 (the port the app will be served on)
 EXPOSE 8080
 
-# Start the Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Start the http-server to serve the app on port 8080
+CMD ["npx", "http-server", ".", "-p", "8080"]
