@@ -5,7 +5,7 @@ FROM nginx:alpine
 COPY dist/pubsub-angular/ /usr/share/nginx/html
 
 # Expose port 80 for the application
-EXPOSE 80
+EXPOSE 8080
 
 # Start the Nginx server
 CMD ["nginx", "-g", "daemon off;"]
