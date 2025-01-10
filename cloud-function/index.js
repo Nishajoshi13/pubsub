@@ -1,101 +1,80 @@
-const express = require('express');
 const { PubSub } = require('@google-cloud/pubsub');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-
-const app = express();
-
-
-app.use(cors({
-  origin: 'http://localhost:4200',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type'],
-}));
-
-app.use(bodyParser.json());
-app.options('*', cors());
-
 const pubsub = new PubSub({
- keyFilename: './my-kubernetes-project-444304-998516f6374c.json'
+  keyFilename: './my-kubernetes-project-444304-998516f6374c.json'
 });
 
-const topicName = 'cloudfunction-topic'; 
-const subscriptionName = 'cloudfunction-sub'; 
-
-app.post('/publish', async (req, res) => {
-  const message = req.body.message;
-  res.set('Access-Control-Allow-Origin', 'http://localhost:4200'); // Replace '*' with your frontend's URL in production
+exports.publishMessage = async (req, res) => {
+  // CORS setup
+  res.set('Access-Control-Allow-Origin', '*'); // Replace '*' with your frontend's URL in production
   res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.set('Access-Control-Allow-Headers', 'Content-Type');
-  
+
   if (req.method === 'OPTIONS') {
-    res.status(204).send('');
+    res.status(204).send(''); // Pre-flight request
     return;
   }
+
+  const topicName = 'cloudfunction-topic'; // Replace with your Pub/Sub topic name
+  const message = req.body.message || 'Hello, Pub/Sub!';
+  
   if (!message) {
     return res.status(400).send('Message body is required.');
   }
+
   try {
     const dataBuffer = Buffer.from(message);
     await pubsub.topic(topicName).publishMessage({ data: dataBuffer });
     res.status(200).send('Message published.');
   } catch (error) {
     console.error('Error publishing message:', error);
-    res.status(500).send('Failed to publish message.');
+    res.status(500).send('Error publishing message.');
   }
-});
-//   const message = req.body.message;
-//   if (!message || message.trim() === '') {
-//     return res.status(400).json({ success: false, error: 'Message is required' });
-//   }
+};
 
-//   console.log('Received request with message:', message);
+exports.pullMessages = async (req, res) => {
+  // CORS setup
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
 
-//   try {
-//     const dataBuffer = Buffer.from(message);
-//     const messageId = await pubsub.topic(topicName).publishMessage({
-//       data: dataBuffer,
-//     });
+  if (req.method === 'OPTIONS') {
+    res.status(204).send(''); // Pre-flight request
+    return;
+  }
 
-//     console.log(`Message published with ID: ${messageId}`);
-//     res.status(200).json({ success: true, messageId });
-//   } catch (error) {
-//     console.error('Error publishing message:', error.message);
-//     res.status(500).json({ success: false, error: error.message });
-//   }
-// });
+  const subscriptionName = 'cloudfunction-topic-sub'; // Replace with your subscription name
 
-
-app.get('/pull', async (req, res) => {
   try {
     const subscription = pubsub.subscription(subscriptionName);
-
     const messages = [];
+
     const messageHandler = (message) => {
       messages.push(message.data.toString());
       message.ack();
     };
 
+    // Listen for new messages
     subscription.on('message', messageHandler);
 
+    // Set a timeout to stop listening for messages
     setTimeout(() => {
       subscription.removeListener('message', messageHandler);
-      res.status(200).json({ success: true, messages });
-    }, 5000);
+      res.status(200).json({ messages });
+    }, 5000); // Wait for 5 seconds to collect messages
   } catch (error) {
     console.error('Error pulling messages:', error);
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).send('Failed to pull messages.');
   }
-});
+};
 
 
-app.get('/', (req, res) => {
-  res.send('Welcome to the Pub/Sub backend server!');
-});
+// Default route for health check
+// app.get('/', (req, res) => {
+//   res.send('Welcome to the Pub/Sub backend server!');
+// });
 
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Backend server running on port ${PORT}`);
-});
-
+// Start the server
+// const PORT = 3000;
+// app.listen(PORT, () => {
+//   console.log(`Backend server running on port ${PORT}`);
+// });

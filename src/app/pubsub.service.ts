@@ -23,7 +23,7 @@ export class PubSubService {
   //   return this.http.get(`${this.backendUrl}/pull`,);
   // }
   private publishUrl = 'https://us-central1-my-kubernetes-project-444304.cloudfunctions.net/publishMessage';
-  private pullUrl = 'https://us-central1-my-kubernetes-project-444304.cloudfunctions.net/publishMessage/pull';
+  private pullUrl = ' https://us-central1-my-kubernetes-project-444304.cloudfunctions.net/pullMessages';
 
   constructor(private http: HttpClient) {}
 
