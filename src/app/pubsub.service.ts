@@ -28,7 +28,7 @@ export class PubSubService {
   constructor(private http: HttpClient) {}
 
   publishMessage(message: string): Observable<any> {
-    return this.http.post(this.publishUrl, { message });
+    return this.http.post(this.publishUrl, { message }, { responseType: 'text' });
   }
 
   pullMessages(): Observable<any> {
