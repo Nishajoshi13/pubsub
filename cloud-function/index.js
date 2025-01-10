@@ -30,7 +30,7 @@ exports.publishMessage = async (req, res) => {
   try {
     const dataBuffer = Buffer.from(message);
     await pubsub.topic(topicName).publishMessage({ data: dataBuffer });
-    res.status(200).send('Message published.');
+    res.status(200).json({ message: 'Message published.' });
   } catch (error) {
     console.error('Error publishing message:', error);
     res.status(500).send('Error publishing message.');
