@@ -24,6 +24,7 @@ export class PubSubService {
   // }
 
   private publishUrl = 'https://us-central1-my-kubernetes-project-444304.cloudfunctions.net/publishMessage';
+  // private pullUrl = 'https://us-central1-my-kubernetes-project-444304.cloudfunctions.net/pullMessages';
   private pullUrl = 'https://us-central1-my-kubernetes-project-444304.cloudfunctions.net/pullMessages';
 
   constructor(private http: HttpClient) {}
